@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Game } from "../types/game";
 import { useRouter } from "next/navigation";
-import { Minus, Plus } from "lucide-react";
+import { ArrowBigLeftDashIcon, Minus, Plus } from "lucide-react";
 
 interface GameScreenProps {
   initialGame: Game;
@@ -121,20 +121,26 @@ export default function GameScreen({ initialGame }: GameScreenProps) {
   };
 
   return (
-    <div className="h-[484px] w-[396px] bg-black text-white p-4 flex flex-col">
-      <div className="flex justify-between mb-4">
-        <div className="text-center">
-          <h2>{game.team1.name}</h2>
+    <div className="h-[484px] w-[396px] bg-black text-white p-4 flex flex-col gap-2">
+      <div className="flex justify-between items-center">
+        <h1 className="text-3xl font-bold">Anotador</h1>
+        <Button onClick={() => router.push("/")} className="p-2">
+          <ArrowBigLeftDashIcon className="h-1 w-1" />
+        </Button>
+      </div>
+      <div className="flex justify-between gap-2">
+        <div className="text-center w-1/2 bg-purple-300 rounded-md text-purple-900">
+          <h2 className="text-sm">{game.team1.name}</h2>
           <div className="text-2xl font-bold">{game.team1.totalGoals}</div>
         </div>
-        <div className="text-center">
-          <h2>{game.team2.name}</h2>
+        <div className="text-center w-1/2 bg-blue-300 rounded-md text-blue-900">
+          <h2 className="text-sm">{game.team2.name}</h2>
           <div className="text-2xl font-bold">{game.team2.totalGoals}</div>
         </div>
       </div>
 
-      <div className="flex-1 grid grid-cols-2 gap-3 overflow-y-auto my-4">
-        <div className="flex flex-col gap-2">
+      <div className="flex-1 grid grid-cols-2 gap-3 overflow-y-auto">
+        <div className="flex flex-col gap-1">
           {game.team1.players.map((player) => (
             <div
               key={player.id}
@@ -200,7 +206,7 @@ export default function GameScreen({ initialGame }: GameScreenProps) {
 
       <Button
         onClick={handleFinish}
-        className="w-full bg-red-600 hover:bg-red-700 mt-auto"
+        className="w-full bg-red-600 hover:bg-red-700 mt-auto  h-16 text-3xl"
       >
         Terminar
       </Button>

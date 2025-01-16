@@ -3,8 +3,9 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Pencil } from "lucide-react";
+import { ArrowBigLeftDashIcon, Trash } from "lucide-react";
 import { Player, Team } from "../types/game";
+import { useRouter } from "next/navigation";
 
 interface TeamSetupProps {
   onNext: (team: Team) => void;
@@ -13,6 +14,7 @@ interface TeamSetupProps {
 }
 
 export default function TeamSetup({ onNext, team, otherTeam }: TeamSetupProps) {
+  const router = useRouter();
   const [newTeam, setTeam] = useState<Team>({ ...team });
   const [players, setPlayers] = useState<Player[]>([]);
   const [newPlayer, setNewPlayer] = useState("");
@@ -45,7 +47,7 @@ export default function TeamSetup({ onNext, team, otherTeam }: TeamSetupProps) {
   };
 
   const addPlayer = () => {
-    if (newPlayer.trim() && players.length < 4) {
+    if (newPlayer.trim()) {
       setPlayers([
         ...players,
         { id: Date.now().toString(), name: newPlayer, goals: 0 },
@@ -64,65 +66,74 @@ export default function TeamSetup({ onNext, team, otherTeam }: TeamSetupProps) {
     }
   };
 
+  const removePlayer = (id: string) => {
+    setPlayers(players.filter((player) => player.id !== id));
+  };
+
   return (
-    <div className="h-[484px] w-[396px] bg-black text-white p-4 flex flex-col">
+    <div className="h-[484px] w-[396px] bg-black text-white p-4 flex flex-col gap-4">
       <div className="space-y-2">
-        <h1>{newTeam.name}</h1>
+        <div className="flex justify-between items-center">
+          <h1 className="text-3xl font-bold">Creador de equipo</h1>
+          <Button onClick={() => router.push("/")} className="p-2">
+            <ArrowBigLeftDashIcon className="h-1 w-1" />
+          </Button>
+        </div>
         <div className="flex items-center gap-2">
           <Input
             value={newTeam.name}
             onChange={handleTeamNameChange}
-            className={`bg-gray-800 border-none text-white ${
+            placeholder="Nombre del equipo"
+            className={`bg-gray-800 border-none text-white h-12 text-2xl ${
               nameError ? "border-red-500" : ""
             }`}
           />
-          <Button size="icon" variant="ghost" className="bg-gray-800">
-            <Pencil className="h-4 w-4" />
-          </Button>
         </div>
-        {nameError && <p className="text-red-500 text-sm">{nameError}</p>}
+        {nameError && <p className="text-red-500 text-base">{nameError}</p>}
       </div>
 
-      <div className="flex-1 overflow-y-auto space-y-2 my-4">
-        {players.map((player) => (
-          <div
-            key={player.id}
-            className="flex items-center gap-2 p-2 bg-gray-800 rounded-lg"
-          >
-            <span className="text-purple-400">{player.name}</span>
-            <Button size="icon" variant="ghost" className="ml-auto">
-              <Pencil className="h-4 w-4" />
-            </Button>
-          </div>
-        ))}
-      </div>
-
-      <div className="space-y-4 mt-auto">
+      <div className="space-y-4">
         <div className="flex items-center gap-2">
           <Input
             value={newPlayer}
             onChange={(e) => setNewPlayer(e.target.value)}
             placeholder="Nombre jugador"
-            className="bg-gray-800 border-none text-white"
-            onKeyPress={(e) => e.key === "Enter" && addPlayer()}
+            className="bg-gray-200 border-none text-slate-700  h-8 text-xl "
           />
-          <Button
-            onClick={addPlayer}
-            disabled={players.length >= 4}
-            className="bg-gray-800"
-          >
+          <Button onClick={addPlayer} className="bg-violet-600 h-8">
             +
           </Button>
         </div>
-
-        <Button
-          onClick={handleNext}
-          disabled={players.length === 0 || !!nameError}
-          className="w-full bg-green-600 hover:bg-green-700"
-        >
-          Siguiente
-        </Button>
       </div>
+
+      <div className="flex-1 overflow-y-auto gap-1 flex flex-col">
+        {players.map((player, index) => (
+          <div
+            key={player.id}
+            className="flex items-center gap-2 p-2 bg-gray-800 rounded-lg"
+          >
+            <span className="text-purple-400">
+              {index + 1}. {player.name}
+            </span>
+            <Button
+              size="icon"
+              variant="destructive"
+              className="ml-auto"
+              onClick={() => removePlayer(player.id)}
+            >
+              <Trash className="h-2 w-2" />
+            </Button>
+          </div>
+        ))}
+      </div>
+
+      <Button
+        onClick={handleNext}
+        disabled={players.length === 0 || !!nameError}
+        className="w-full bg-green-600 hover:bg-green-700 h-16 text-3xl"
+      >
+        Siguiente
+      </Button>
     </div>
   );
 }

@@ -78,7 +78,7 @@ export default function History({ games = [] }: HistoryProps) {
         ))}
       </div>
       <Button
-        className="w-full bg-gray-800 hover:bg-gray-700 text-white text-3xl h-20"
+        className="w-full bg-gray-800 hover:bg-gray-700 text-white text-3xl h-16"
         onClick={() => router.push("/")}
       >
         Volver
