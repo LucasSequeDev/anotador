@@ -13,7 +13,8 @@ export default function MainMenu() {
 
   return (
     <div className="h-full w-full bg-black text-white p-4 flex flex-col gap-4">
-      <h1 className="text-center w-full text-5xl py-6">Anotador ⚽</h1>
+      <h1 className="text-center w-full text-5xl">Anotador ⚽</h1>
+      <h2 className="text-center w-full text-xl">Un sentimiento</h2>
       <Button
         className="w-full bg-green-600 hover:bg-green-700 text-white text-3xl h-20"
         onClick={() => router.push("/new-game")}

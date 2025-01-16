@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Anotador ⚽",
+  title: "Anotador - Un sentimiento",
   description: "Crea y lleva el control de tus partidos.",
 };
 
