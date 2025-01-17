@@ -19,10 +19,19 @@ export default function GameScreen({ initialGame }: GameScreenProps) {
         localStorage.getItem("games") || "[]"
       ) as Game[];
 
+      console.log("savedGames", savedGames);
+
       const gameIndex = savedGames.findIndex((g: Game) => g.id === game.id);
 
+      console.log("gameIndex", gameIndex);
+
       if (gameIndex === -1)
-        return localStorage.setItem("games", JSON.stringify([game]));
+        return localStorage.setItem(
+          "games",
+          JSON.stringify([...savedGames, game])
+        );
+
+      console.log("savedGames", savedGames);
 
       savedGames[gameIndex] = game;
 
@@ -146,7 +155,7 @@ export default function GameScreen({ initialGame }: GameScreenProps) {
               key={player.id}
               className="flex items-center bg-purple-600/20 rounded-lg p-2"
             >
-              <span className="flex-1 text-sm">{player.name}</span>
+              <span className="flex-1 text-sm truncate">{player.name}</span>
               <div className="flex items-center gap-1">
                 <Button
                   size="icon"
@@ -157,7 +166,7 @@ export default function GameScreen({ initialGame }: GameScreenProps) {
                 >
                   <Minus className="h-4 w-4" />
                 </Button>
-                <span className="w-6 text-center">{player.goals}</span>
+                <span className="w-6 text-center ">{player.goals}</span>
                 <Button
                   size="icon"
                   type="button"
@@ -177,7 +186,7 @@ export default function GameScreen({ initialGame }: GameScreenProps) {
               key={player.id}
               className="flex items-center bg-blue-600/20 rounded-lg p-2"
             >
-              <span className="flex-1 text-sm">{player.name}</span>
+              <span className="flex-1 text-sm truncate">{player.name}</span>
               <div className="flex items-center gap-1">
                 <Button
                   size="icon"

@@ -3,22 +3,49 @@
 import { useRouter } from "next/navigation";
 import { Game } from "../types/game";
 import { Button } from "@/components/ui/button";
-
+import { ArrowLeft, Calendar, Trophy } from "lucide-react";
+import { motion } from "framer-motion";
 interface HistoryProps {
   games?: Game[];
 }
 
 export default function History({ games = [] }: HistoryProps) {
   const router = useRouter();
+
+  const getWinner = (game: Game) => {
+    if (game.team1.totalGoals > game.team2.totalGoals) return game.team1.name;
+    if (game.team2.totalGoals > game.team1.totalGoals) return game.team2.name;
+    return "Empate";
+  };
+
+  const getScoreColor = (game: Game, teamNumber: 1 | 2) => {
+    const team = teamNumber === 1 ? game.team1 : game.team2;
+    const otherTeam = teamNumber === 1 ? game.team2 : game.team1;
+
+    if (team.totalGoals > otherTeam.totalGoals) return "text-green-400";
+    if (team.totalGoals < otherTeam.totalGoals) return "text-red-400";
+    return "text-gray-400";
+  };
+
   if (games.length === 0) {
     return (
-      <div className="h-[484px] w-[396px] bg-black text-white p-4 flex items-center justify-center flex-col gap-4">
-        <p className="text-gray-400">No hay partidos registrados</p>
+      <div className="h-[484px] w-[396px] bg-black text-white p-6 flex flex-col items-center justify-center gap-6">
+        <div className="text-center space-y-2">
+          <Trophy className="w-12 h-12 mx-auto text-yellow-500 mb-4 opacity-20" />
+          <h2 className="text-xl font-semibold text-gray-300">
+            Sin partidos registrados
+          </h2>
+          <p className="text-sm text-gray-500">
+            Los partidos que registres aparecerán aquí
+          </p>
+        </div>
         <Button
-          className="w-full bg-gray-800 hover:bg-gray-700 text-white text-3xl h-20"
           onClick={() => router.push("/")}
+          variant="outline"
+          className="bg-transparent border-gray-800 text-gray-300 hover:bg-gray-800"
         >
-          Volver
+          <ArrowLeft className="w-4 h-4 mr-2" />
+          Volver al inicio
         </Button>
       </div>
     );
@@ -27,54 +54,107 @@ export default function History({ games = [] }: HistoryProps) {
   return (
     <div className="h-[484px] w-[396px] bg-black text-white p-4 flex flex-col">
       <div className="flex-1 overflow-y-auto space-y-4">
-        {games.map((game) => (
-          <div key={game.id} className="mb-4 p-3 bg-gray-800 rounded-lg">
-            <div className="text-xs text-gray-400 flex justify-between">
-              {new Date(game.date).toLocaleDateString()}
-              <div className="rounded-2xl bg-card-foreground px-3 py-1">
-                {game.status}
-              </div>
+        {games.map((game, index) => (
+          <motion.div
+            key={game.id}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.1 }}
+            className="group relative bg-gray-900 rounded-xl p-4 hover:bg-gray-800 transition-colors"
+          >
+            <div className="flex items-center text-xs text-gray-500 mb-3">
+              <Calendar className="w-3 h-3 mr-1" />
+              {new Date(game.date).toLocaleDateString("es-ES", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })}
             </div>
-            <div className="flex justify-between mt-2">
-              <div className="text-center">
-                <div className="font-bold">{game.team1.name}</div>
-                <div className="text-xl">{game.team1.totalGoals}</div>
-              </div>
-              <div className="text-xl font-bold">vs</div>
-              <div className="text-center">
-                <div className="font-bold">{game.team2.name}</div>
-                <div className="text-xl">{game.team2.totalGoals}</div>
-              </div>
-            </div>
-            <div className="flex flex-col">
-              <div className="text-sm text-gray-400">Goles</div>
-              <div className="flex justify-between mt-2">
-                <div>
-                  {game.team1.players.map((player) => (
-                    <div key={player.id} className="flex items-center gap-1">
-                      <span>{player.name}</span>
-                      <span>{player.goals}</span>
-                    </div>
-                  ))}
-                </div>
-                <div>
-                  {game.team2.players.map((player) => (
-                    <div key={player.id} className="flex items-center gap-1">
-                      <span>{player.name}</span>
-                      <span>{player.goals}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
 
+            <div className="flex items-center justify-between mb-3">
+              <div className="text-center flex-1">
+                <p className="font-medium mb-1 truncate">{game.team1.name}</p>
+                <span
+                  className={`text-2xl font-bold ${getScoreColor(game, 1)}`}
+                >
+                  {game.team1.totalGoals}
+                </span>
+              </div>
+              <div className="px-4">
+                <span className="text-sm font-medium text-gray-600">vs</span>
+              </div>
+              <div className="text-center flex-1">
+                <p className="font-medium mb-1 truncate">{game.team2.name}</p>
+                <span
+                  className={`text-2xl font-bold ${getScoreColor(game, 2)}`}
+                >
+                  {game.team2.totalGoals}
+                </span>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-center text-xs">
+              <div
+                className={`
+              px-2 py-1 rounded-full
+              ${
+                getWinner(game) === "Empate"
+                  ? "bg-gray-800 text-gray-400"
+                  : "bg-yellow-500/10 text-yellow-500"
+              }
+            `}
+              >
+                {getWinner(game) === "Empate" ? (
+                  "Empate"
+                ) : (
+                  <div className="flex items-center gap-1">
+                    <Trophy className="w-3 h-3" />
+                    {getWinner(game)}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Goleadores */}
+            <div className="mt-3 pt-3 border-t border-gray-800/50">
+              Goleadores
+              <div className="grid grid-cols-2 gap-16">
+                <div className="space-y-1">
+                  {game.team1.players
+                    .filter((p) => p.goals > 0)
+                    .map((player) => (
+                      <div
+                        key={player.id}
+                        className="flex items-center justify-between text-xs text-gray-400"
+                      >
+                        <span className="truncate">{player.name}</span>
+                        <span className="font-mono">{player.goals}</span>
+                      </div>
+                    ))}
+                </div>
+                <div className="space-y-1">
+                  {game.team2.players
+                    .filter((p) => p.goals > 0)
+                    .map((player) => (
+                      <div
+                        key={player.id}
+                        className="flex items-center justify-between text-xs text-gray-400"
+                      >
+                        <span className="truncate">{player.name}</span>
+                        <span className="font-mono">{player.goals}</span>
+                      </div>
+                    ))}
+                </div>
+              </div>
               <Button
                 variant="secondary"
+                className="w-full mt-2"
                 onClick={() => router.push(`/new-game?id=${game.id}`)}
               >
                 Ver
               </Button>
             </div>
-          </div>
+          </motion.div>
         ))}
       </div>
       <Button
