@@ -42,8 +42,8 @@ export default function TeamSetup({ onNext, team, otherTeam }: TeamSetupProps) {
 
   const handleTeamNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newName = e.target.value;
-    setTeam({ ...newTeam, name: newName });
     validateTeamName(newName);
+    setTeam({ ...newTeam, name: newName });
   };
 
   const addPlayer = () => {
@@ -60,6 +60,7 @@ export default function TeamSetup({ onNext, team, otherTeam }: TeamSetupProps) {
     if (validateTeamName(newTeam.name)) {
       onNext({
         ...team,
+        ...newTeam,
         players,
         totalGoals: 0,
       });

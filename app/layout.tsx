@@ -1,5 +1,11 @@
 import type { Metadata } from "next";
+import { Roboto } from "next/font/google";
 import "./globals.css";
+
+const roboto = Roboto({
+  weight: "400",
+  subsets: ["latin"],
+});
 
 export const metadata: Metadata = {
   title: "Anotador - Un sentimiento",
@@ -13,7 +19,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es">
-      <body className="bg-black">
+      <body className={roboto.className}>
         <main className="w-[396px] h-[484px] mx-auto overflow-hidden">
           {children}
         </main>

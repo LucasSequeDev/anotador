@@ -20,18 +20,15 @@ export default function GameScreen({ initialGame }: GameScreenProps) {
       ) as Game[];
 
       console.log("savedGames", savedGames);
+      console.log("game", game);
 
       const gameIndex = savedGames.findIndex((g: Game) => g.id === game.id);
-
-      console.log("gameIndex", gameIndex);
 
       if (gameIndex === -1)
         return localStorage.setItem(
           "games",
           JSON.stringify([...savedGames, game])
         );
-
-      console.log("savedGames", savedGames);
 
       savedGames[gameIndex] = game;
 

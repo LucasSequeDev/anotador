@@ -21,6 +21,7 @@ const DEFAULT_TEAM_2: Team = {
 
 export const StepNewGame = () => {
   const searchParams = useSearchParams();
+  const [existGame, setExistGame] = useState<Game | undefined>(undefined);
 
   useEffect(() => {
     const id = searchParams.get("id");
@@ -33,6 +34,7 @@ export const StepNewGame = () => {
       setStep(3);
       setTeam1(existGame.team1);
       setTeam2(existGame.team2);
+      setExistGame(existGame);
     }
   }, [searchParams]);
 
@@ -63,6 +65,10 @@ export const StepNewGame = () => {
   }
 
   if (step === 3 && team1 && team2) {
+    if (existGame) {
+      return <GameScreen initialGame={existGame} />;
+    }
+
     const newGame: Game = {
       id: Date.now().toString(),
       date: new Date(),
