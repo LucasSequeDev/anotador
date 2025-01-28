@@ -20,28 +20,6 @@ export default function GameScreen() {
     findGameById(id);
   }, [searchParams]);
 
-  // useEffect(() => {
-  //   try {
-  //     const savedGames = JSON.parse(
-  //       localStorage.getItem("games") || "[]"
-  //     ) as Game[];
-
-  //     const gameIndex = savedGames.findIndex((g: Game) => g.id === currentGame.id);
-
-  //     if (gameIndex === -1)
-  //       return localStorage.setItem(
-  //         "games",
-  //         JSON.stringify([...savedGames, currentGame])
-  //       );
-
-  //     savedGames[gameIndex] = currentGame;
-
-  //     localStorage.setItem("games", JSON.stringify(savedGames));
-  //   } catch (error) {
-  //     console.error("Error saving game:", error);
-  //   }
-  // }, [currentGame]);
-
   const incrementGoal = (teamId: string, playerId: string) => {
     if (!currentGame) return;
 
@@ -113,33 +91,35 @@ export default function GameScreen() {
 
       <div className="flex-1 grid grid-cols-2 gap-3 overflow-y-auto">
         {currentGame.teams.map((team) => (
-          <div key={team.id} className="flex flex-col gap-2">
+          <div key={team.id} className="flex flex-col gap-4">
             {team.players.map((player) => (
               <div
                 key={player.id}
                 className="flex items-center bg-purple-600/20 rounded-lg p-2"
               >
-                <span className="flex-1 text-sm truncate">{player.name}</span>
-                <div className="flex items-center gap-1">
-                  <Button
-                    size="icon"
-                    type="button"
-                    variant="ghost"
-                    className="h-8 w-8 bg-purple-600 hover:bg-purple-700"
-                    onClick={() => decrementGoal(team.id, player.id)}
-                  >
-                    <Minus className="h-4 w-4" />
-                  </Button>
-                  <span className="w-6 text-center ">{player.goals}</span>
-                  <Button
-                    size="icon"
-                    type="button"
-                    variant="ghost"
-                    className="h-8 w-8 bg-purple-600 hover:bg-purple-700"
-                    onClick={() => incrementGoal(team.id, player.id)}
-                  >
-                    <Plus className="h-4 w-4" />
-                  </Button>
+                <div className="flex flex-col justify-center items-center w-full">
+                  <span className="flex-1 text-sm">{player.name}</span>
+                  <div className="flex items-center gap-1 w-full">
+                    <Button
+                      size="icon"
+                      type="button"
+                      variant="ghost"
+                      className="h-8  bg-purple-600 hover:bg-purple-700 w-full"
+                      onClick={() => decrementGoal(team.id, player.id)}
+                    >
+                      <Minus className="h-4 w-4" />
+                    </Button>
+                    <span className="w-6 text-center mx-2">{player.goals}</span>
+                    <Button
+                      size="icon"
+                      type="button"
+                      variant="ghost"
+                      className="h-8  bg-purple-600 hover:bg-purple-700 w-full"
+                      onClick={() => incrementGoal(team.id, player.id)}
+                    >
+                      <Plus className="h-4 w-4" />
+                    </Button>
+                  </div>
                 </div>
               </div>
             ))}

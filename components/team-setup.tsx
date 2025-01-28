@@ -91,8 +91,8 @@ export default function TeamSetup({
       <div className="space-y-2">
         <div className="flex justify-between items-center">
           <h1 className="text-3xl font-bold">Creador de equipo</h1>
-          <Button onClick={handleBack} className="p-2">
-            <ArrowBigLeftDashIcon className="h-1 w-1" />
+          <Button onClick={handleBack} className="p-4">
+            <ArrowBigLeftDashIcon className="h-2 w-10" />
           </Button>
         </div>
         <div className="flex items-center gap-2">
@@ -100,7 +100,7 @@ export default function TeamSetup({
             value={newTeam.name}
             onChange={handleTeamNameChange}
             placeholder="Nombre del equipo"
-            className={`bg-gray-800 border-none text-white h-12 text-2xl ${
+            className={`bg-gray-800 border-none text-white h-15 text-3xl ${
               nameError ? "border-red-500" : ""
             }`}
           />
@@ -114,9 +114,9 @@ export default function TeamSetup({
             value={newPlayer}
             onChange={(e) => setNewPlayer(e.target.value)}
             placeholder="Nombre jugador"
-            className="bg-gray-200 border-none text-slate-700  h-8 text-xl "
+            className="bg-gray-200 border-none text-slate-700  h-12 text-2xl "
           />
-          <Button onClick={addPlayer} className="bg-violet-600 h-8">
+          <Button onClick={addPlayer} className="bg-violet-600 h-12 w-20">
             +
           </Button>
         </div>
@@ -128,16 +128,16 @@ export default function TeamSetup({
             key={player.id}
             className="flex items-center gap-2 p-2 bg-gray-800 rounded-lg"
           >
-            <span className="text-purple-400">
+            <span className="text-purple-400 text-xl">
               {index + 1}. {player.name}
             </span>
             <Button
               size="icon"
               variant="destructive"
-              className="ml-auto"
+              className="ml-auto h-12 w-16"
               onClick={() => removePlayer(player.id)}
             >
-              <Trash className="h-2 w-2" />
+              <Trash className="h-4 w-4" />
             </Button>
           </div>
         ))}
